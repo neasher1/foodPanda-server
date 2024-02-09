@@ -24,6 +24,27 @@ const run = async () => {
             res.send(result);
         });
 
+        app.get('/all-foods', async (req, res) => {
+            const query = {};
+            const cursor = foodsCollection.find(query);
+            const allFoods = await cursor.toArray();
+            res.send(allFoods);
+        });
+
+        app.delete('/all-foods/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await foodsCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        app.get('/all-foods/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const food = await foodsCollection.findOne(query);
+            res.send(food);
+        });
+
     }
 
     finally {
