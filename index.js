@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = 5001;
 const cors = require('cors');
 const { query } = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -9,39 +9,40 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://foodpanda:foodpanda@cluster0.hlzaati.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://employee:employee@cluster0.hlzaati.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
 const run = async () => {
     
-    const foodsCollection = client.db('foodsApp').collection("foodsCollection");
+    const employeeCollection = client.db('employeeInformation').collection("employeeCollection");
 
     try {
-        app.post('/add-foods', async (req, res) => {
+        app.post('/add-employee', async (req, res) => {
             const service = req.body;
-            const result = await foodsCollection.insertOne(service);
+            console.log(service);
+            const result = await employeeCollection.insertOne(service);
             res.send(result);
         });
 
-        app.get('/all-foods', async (req, res) => {
+        app.get('/all-employee', async (req, res) => {
             const query = {};
-            const cursor = foodsCollection.find(query);
+            const cursor = employeeCollection.find(query);
             const allFoods = await cursor.toArray();
             res.send(allFoods);
         });
 
-        app.delete('/all-foods/:id', async (req, res) => {
+        app.delete('/all-employee/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
-            const result = await foodsCollection.deleteOne(query);
+            const result = await employeeCollection.deleteOne(query);
             res.send(result);
         });
 
-        app.get('/all-foods/:id', async (req, res) => {
+        app.get('/all-employee/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
-            const food = await foodsCollection.findOne(query);
+            const food = await employeeCollection.findOne(query);
             res.send(food);
         });
 
@@ -60,5 +61,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Food Panda Server is running on port: ${5000}`);
+    console.log(`Food Panda Server is running on port: ${5001}`);
 })
